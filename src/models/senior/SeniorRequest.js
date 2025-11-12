@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
     'SeniorRequest',
     {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-      seniorId: { type: DataTypes.INTEGER, allowNull: false },
+      seniorId: { type: DataTypes.INTEGER, allowNull: false, field: 'seniorid' },
       title: { type: DataTypes.STRING(255), allowNull: false },
       description: { type: DataTypes.TEXT, allowNull: false },
       type: { type: DataTypes.ENUM('hospital', 'rides', 'groceries', 'companionship', 'technology_help', 'household_tasks', 'government_services', 'medicines', 'reading_writing', 'other'), allowNull: false },
@@ -13,7 +13,7 @@ module.exports = (sequelize) => {
       location: { type: DataTypes.STRING(255), allowNull: true },
       preferredTime: { type: DataTypes.STRING(100), allowNull: true },
       status: { type: DataTypes.ENUM('open', 'assigned', 'in_progress', 'completed', 'cancelled'), allowNull: false, defaultValue: 'open' },
-      assignedStudentId: { type: DataTypes.INTEGER, allowNull: true },
+      assignedStudentId: { type: DataTypes.INTEGER, allowNull: true, field: 'assignedstudentid' },
       assignedAt: { type: DataTypes.DATE, allowNull: true },
       completedAt: { type: DataTypes.DATE, allowNull: true },
       estimatedDuration: { type: DataTypes.INTEGER, allowNull: true, comment: 'Duration in minutes' },

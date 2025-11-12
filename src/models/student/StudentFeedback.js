@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
     'StudentFeedback',
     {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-      studentId: { type: DataTypes.INTEGER, allowNull: false },
+      studentId: { type: DataTypes.INTEGER, allowNull: false, field: 'studentid' },
       seniorEmail: { type: DataTypes.STRING(160), allowNull: false },
       rating: { type: DataTypes.INTEGER, allowNull: false },
       comments: { type: DataTypes.STRING(500), allowNull: true },

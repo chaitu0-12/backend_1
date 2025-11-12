@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
     'StudentCertification',
     {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-      studentId: { type: DataTypes.INTEGER, allowNull: false },
+      studentId: { type: DataTypes.INTEGER, allowNull: false, field: 'studentid' },
       title: { type: DataTypes.STRING(160), allowNull: false },
       // New: store file binary directly in DB
       fileBlob: { type: DataTypes.BLOB('long'), allowNull: true },

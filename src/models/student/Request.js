@@ -8,7 +8,7 @@ module.exports = (sequelize) => {
       seniorEmail: { type: DataTypes.STRING(160), allowNull: false },
       type: { type: DataTypes.ENUM('hospital', 'rides', 'groceries', 'companionship'), allowNull: false },
       status: { type: DataTypes.ENUM('new', 'assigned', 'in_progress', 'completed'), allowNull: false, defaultValue: 'new' },
-      assignedStudentId: { type: DataTypes.INTEGER, allowNull: true },
+      assignedStudentId: { type: DataTypes.INTEGER, allowNull: true, field: 'assignedstudentid' },
       createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
       updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
     },
