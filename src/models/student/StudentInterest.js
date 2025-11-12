@@ -5,17 +5,18 @@ module.exports = (sequelize) => {
     'StudentInterest',
     {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-      studentId: { type: DataTypes.INTEGER, allowNull: false, field: 'studentid' },
-      type: { type: DataTypes.STRING(64), allowNull: false },
-      createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
-      updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
+      studentId: { type: DataTypes.INTEGER, allowNull: false, field: 'student_id' },
+      interests: { type: DataTypes.TEXT, allowNull: true },
+      skills: { type: DataTypes.TEXT, allowNull: true },
+      availability: { type: DataTypes.TEXT, allowNull: true },
+      createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW, field: 'created_at' },
+      updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW, field: 'updated_at' },
     },
     { 
       tableName: 'student_interests',
       indexes: [
         {
-          unique: true,
-          fields: ['studentid', 'type']
+          fields: ['student_id']
         }
       ]
     }

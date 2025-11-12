@@ -5,38 +5,35 @@ module.exports = (sequelize) => {
     'SeniorRequest',
     {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-      seniorId: { type: DataTypes.INTEGER, allowNull: false, field: 'seniorid' },
+      seniorId: { type: DataTypes.INTEGER, allowNull: false, field: 'senior_id' },
       title: { type: DataTypes.STRING(255), allowNull: false },
-      description: { type: DataTypes.TEXT, allowNull: false },
+      description: { type: DataTypes.TEXT, allowNull: false, field: 'request_text' },
       type: { type: DataTypes.ENUM('hospital', 'rides', 'groceries', 'companionship', 'technology_help', 'household_tasks', 'government_services', 'medicines', 'reading_writing', 'other'), allowNull: false },
       priority: { type: DataTypes.ENUM('low', 'medium', 'high', 'urgent'), allowNull: false, defaultValue: 'medium' },
       location: { type: DataTypes.STRING(255), allowNull: true },
       preferredTime: { type: DataTypes.STRING(100), allowNull: true },
       status: { type: DataTypes.ENUM('open', 'assigned', 'in_progress', 'completed', 'cancelled'), allowNull: false, defaultValue: 'open' },
-      assignedStudentId: { type: DataTypes.INTEGER, allowNull: true, field: 'assignedstudentid' },
+      assignedStudentId: { type: DataTypes.INTEGER, allowNull: true, field: 'student_id' },
       assignedAt: { type: DataTypes.DATE, allowNull: true },
       completedAt: { type: DataTypes.DATE, allowNull: true },
       estimatedDuration: { type: DataTypes.INTEGER, allowNull: true, comment: 'Duration in minutes' },
       // Additional fields for contact information
       requesterName: { type: DataTypes.STRING(255), allowNull: true },
       requesterPhone: { type: DataTypes.STRING(20), allowNull: true },
-      createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
-      updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
+      createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW, field: 'created_at' },
+      updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW, field: 'updated_at' },
     },
     { 
       tableName: 'senior_requests',
       indexes: [
         {
-          fields: ['seniorid']
+          fields: ['senior_id']
         },
         {
-          fields: ['assignedstudentid']
+          fields: ['student_id']
         },
         {
           fields: ['status']
-        },
-        {
-          fields: ['type']
         }
       ]
     }
