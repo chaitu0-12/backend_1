@@ -2,8 +2,9 @@ services:
   - type: web
     name: backend-1-1-p7wr
     env: node
+    rootDir: .
     buildCommand: npm install
-    startCommand: node src/server.js
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
