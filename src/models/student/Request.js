@@ -12,7 +12,16 @@ module.exports = (sequelize) => {
       createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
       updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
     },
-    { tableName: 'requests' }
+    { tableName: 'requests',
+      indexes: [
+        {
+          fields: ['assignedstudentid']
+        },
+        {
+          fields: ['status']
+        }
+      ]
+    }
   );
 
   return Request;

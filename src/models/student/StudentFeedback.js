@@ -12,7 +12,16 @@ module.exports = (sequelize) => {
       createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
       updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
     },
-    { tableName: 'student_feedback' }
+    { tableName: 'student_feedback',
+      indexes: [
+        {
+          fields: ['studentid']
+        },
+        {
+          fields: ['rating']
+        }
+      ]
+    }
   );
   return StudentFeedback;
 };

@@ -11,7 +11,13 @@ module.exports = (sequelize) => {
       updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
     },
     { 
-      tableName: 'student_interests'
+      tableName: 'student_interests',
+      indexes: [
+        {
+          unique: true,
+          fields: ['studentid', 'type']
+        }
+      ]
     }
   );
   return StudentInterest;

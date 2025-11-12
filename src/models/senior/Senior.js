@@ -23,7 +23,14 @@ module.exports = (sequelize) => {
       createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
       updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
     },
-    { tableName: 'seniors' }
+    { tableName: 'seniors',
+      indexes: [
+        {
+          fields: ['email'],
+          unique: true
+        }
+      ]
+    }
   );
 
   return Senior;

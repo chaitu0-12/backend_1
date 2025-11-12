@@ -22,7 +22,22 @@ module.exports = (sequelize) => {
       updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
     },
     { 
-      tableName: 'senior_feedback'
+      tableName: 'senior_feedback',
+      indexes: [
+        {
+          fields: ['requestid'],
+          unique: true // One feedback per request
+        },
+        {
+          fields: ['seniorid']
+        },
+        {
+          fields: ['studentid']
+        },
+        {
+          fields: ['rating']
+        }
+      ]
     }
   );
 
