@@ -11,14 +11,7 @@ module.exports = (sequelize) => {
       updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
     },
     { 
-      tableName: 'student_interests',
-      // Add unique constraint to ensure each student can only have one interest of each type
-      indexes: [
-        {
-          unique: true,
-          fields: ['studentid', 'type']
-        }
-      ]
+      tableName: 'student_interests'
     }
   );
   return StudentInterest;

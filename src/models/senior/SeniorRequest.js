@@ -24,21 +24,7 @@ module.exports = (sequelize) => {
       updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
     },
     { 
-      tableName: 'senior_requests',
-      indexes: [
-        {
-          fields: ['seniorid']
-        },
-        {
-          fields: ['assignedstudentid']
-        },
-        {
-          fields: ['status']
-        },
-        {
-          fields: ['type']
-        }
-      ]
+      tableName: 'senior_requests'
     }
   );
 
