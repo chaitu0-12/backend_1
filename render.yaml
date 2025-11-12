@@ -36,3 +36,6 @@ services:
         value: nnrt ednr glyh wrwz
       - key: EMAIL_FROM
         value: WE TOO <kalyankumar.muli64@gmail.com>
+      # Uncomment and set SendGrid API key if you want to use SendGrid as fallback
+      # - key: SENDGRID_API_KEY
+      #   value: YOUR_SENDGRID_API_KEY_HERE

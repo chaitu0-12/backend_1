@@ -115,9 +115,12 @@ async function requestOtp(req, res) {
       });
     } catch (emailError) {
       console.error(`❌ Email sending failed for ${email}:`, emailError);
+      // Log specific error details for debugging
+      console.error(`Error details - Code: ${emailError.code}, Command: ${emailError.command}`);
+      
       // Don't fail the request if email sending fails, still return success
       return res.json({ 
-        message: 'OTP generated successfully. Please check your email for the verification code or contact support if you don\'t receive it.'
+        message: 'OTP generated successfully. Please check your email for the verification code or contact support if you don\'t receive it. (Email service temporarily unavailable)'
       });
     }
     
