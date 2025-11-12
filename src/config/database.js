@@ -15,6 +15,18 @@ function createSequelizeInstance() {
     port: Number(process.env.DB_PORT || 3306),
     dialect: 'mysql',
     logging: false,
+    dialectOptions: {
+      ssl: process.env.DB_SSL === 'true' ? {
+        rejectUnauthorized: true
+      } : false,
+      connectTimeout: 60000
+    },
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 60000,
+      idle: 10000
+    }
   };
 
   const db = new Sequelize(
