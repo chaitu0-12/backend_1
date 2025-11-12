@@ -149,8 +149,10 @@ CREATE TABLE otp_tokens (
   email VARCHAR(255) NOT NULL,
   code VARCHAR(6) NOT NULL,
   purpose ENUM('reset', 'registration') DEFAULT 'reset',
+  used BOOLEAN NOT NULL DEFAULT FALSE,
   expires_at DATETIME NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   KEY idx_email (email),
   KEY idx_code (code),
   KEY idx_expires (expires_at)

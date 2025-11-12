@@ -9,9 +9,9 @@ module.exports = (sequelize) => {
       code: { type: DataTypes.STRING(8), allowNull: false },
       purpose: { type: DataTypes.STRING(32), allowNull: false }, // 'reset'
       used: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
-      expiresAt: { type: DataTypes.DATE, allowNull: false },
-      createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
-      updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
+      expiresAt: { type: DataTypes.DATE, allowNull: false, field: 'expires_at' },
+      createdAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW, field: 'created_at' },
+      updatedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW, field: 'updated_at' },
     },
     { tableName: 'otp_tokens' }
   );

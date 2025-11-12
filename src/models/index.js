@@ -148,6 +148,29 @@ async function connectAndSync() {
       console.log('senior_feedback column check skipped:', innerErr.message);
     }
     
+    // Ensure otp_tokens has used and updated_at columns
+    try {
+      const [otpCols] = await db.query(`
+        SELECT column_name 
+        FROM information_schema.columns 
+        WHERE table_schema = 'public' 
+        AND table_name = 'otp_tokens'
+      `);
+
+      const otpColNames = otpCols.map(c => c.column_name);
+      if (!otpColNames.includes('used')) {
+        await db.query(`ALTER TABLE otp_tokens ADD COLUMN used BOOLEAN NOT NULL DEFAULT FALSE`);
+        console.log('Added used column to otp_tokens table');
+      }
+      if (!otpColNames.includes('updated_at')) {
+        await db.query(`ALTER TABLE otp_tokens ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP`);
+        console.log('Added updated_at column to otp_tokens table');
+      }
+    } catch (innerErr) {
+      // Log and continue
+      console.log('otp_tokens column check skipped:', innerErr.message);
+    }
+    
     console.log('✅ Database schema updated successfully');
   } catch (err) {
     console.error('❌ Error updating database schema:', err.message);
