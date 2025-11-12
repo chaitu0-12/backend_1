@@ -4,7 +4,7 @@ module.exports = (sequelize) => {
   const Student = sequelize.define(
     'Student',
     {
-      id: { type: DataTypes.INTEGER.UNSIGNED, primaryKey: true, autoIncrement: true },
+      id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
       fullName: { type: DataTypes.STRING(120), allowNull: false },
       phoneNumber: { type: DataTypes.STRING(20), allowNull: false },
       email: { type: DataTypes.STRING(160), allowNull: false, unique: true },

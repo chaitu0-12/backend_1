@@ -4,10 +4,10 @@ module.exports = (sequelize) => {
   const SeniorFeedback = sequelize.define(
     'SeniorFeedback',
     {
-      id: { type: DataTypes.INTEGER.UNSIGNED, primaryKey: true, autoIncrement: true },
-      requestId: { type: DataTypes.INTEGER.UNSIGNED, allowNull: true }, // Allow null for general feedback
-      seniorId: { type: DataTypes.INTEGER.UNSIGNED, allowNull: true }, // Allow null for anonymous feedback
-      studentId: { type: DataTypes.INTEGER.UNSIGNED, allowNull: true }, // Allow null for general feedback
+      id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+      requestId: { type: DataTypes.INTEGER, allowNull: true }, // Allow null for general feedback
+      seniorId: { type: DataTypes.INTEGER, allowNull: true }, // Allow null for anonymous feedback
+      studentId: { type: DataTypes.INTEGER, allowNull: true }, // Allow null for general feedback
       rating: { type: DataTypes.INTEGER, allowNull: false, validate: { min: 1, max: 5 } },
       feedback: { type: DataTypes.TEXT, allowNull: true },
       // New fields to capture services requested and desired features

@@ -4,7 +4,7 @@ module.exports = (sequelize) => {
   const OtpToken = sequelize.define(
     'OtpToken',
     {
-      id: { type: DataTypes.INTEGER.UNSIGNED, primaryKey: true, autoIncrement: true },
+      id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
       email: { type: DataTypes.STRING(160), allowNull: false },
       code: { type: DataTypes.STRING(8), allowNull: false },
       purpose: { type: DataTypes.STRING(32), allowNull: false }, // 'reset'

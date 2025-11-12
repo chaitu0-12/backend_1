@@ -1,21 +1,23 @@
-const { Student, Senior } = require('./src/models');
+const { createSequelizeInstance } = require('./src/config/database');
 
-async function testDbConnection() {
+async function testConnection() {
   try {
     console.log('Testing database connection...');
+    const db = createSequelizeInstance();
     
-    // Test Student model
-    const studentCount = await Student.count();
-    console.log(`Student table has ${studentCount} records`);
+    await db.authenticate();
+    console.log('✅ Database connection successful!');
     
-    // Test Senior model
-    const seniorCount = await Senior.count();
-    console.log(`Senior table has ${seniorCount} records`);
+    // Test a simple query
+    const [results] = await db.query('SELECT version()');
+    console.log('Database version:', results[0].version);
     
-    console.log('Database connection successful!');
+    await db.close();
+    console.log('✅ Connection test completed successfully');
   } catch (error) {
-    console.error('Database connection failed:', error.message);
+    console.error('❌ Database connection failed:', error.message);
+    console.error('Error stack:', error.stack);
   }
 }
 
-testDbConnection();
+testConnection();
