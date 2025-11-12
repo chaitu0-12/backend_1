@@ -26,6 +26,7 @@ function createSequelizeInstance() {
     password: dbPass ? '****' : ''
   });
   
+  // Force the dialect to be postgres
   const common = {
     host: dbHost,
     port: dbPort,
@@ -45,12 +46,22 @@ function createSequelizeInstance() {
     }
   };
 
+  // Create the database connection with explicit protocol
   const db = new Sequelize(
     dbName,
     dbUser,
     dbPass,
     common
   );
+
+  // Add connection event listeners for debugging
+  db.connectionManager.on('connection-acquired', (connection) => {
+    console.log('✅ Database connection acquired');
+  });
+  
+  db.connectionManager.on('connection-released', (connection) => {
+    console.log('🔄 Database connection released');
+  });
 
   return db;
 }

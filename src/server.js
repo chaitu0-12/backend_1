@@ -27,17 +27,42 @@ async function startServer() {
     
     // Connect to database and sync models
     await connectAndSync();
-    console.log('Databases connected and synced');
+    console.log('✅ Databases connected and synced');
     
     const app = createApp();
     const server = http.createServer(app);
     
     server.listen(port, host, () => {
-      console.log(`WE TOO API listening on ${host}:${port}`);
+      console.log(`✅ WE TOO API listening on ${host}:${port}`);
+    });
+    
+    // Handle server errors
+    server.on('error', (error) => {
+      console.error('❌ Server error:', error);
+      if (error.syscall !== 'listen') {
+        throw error;
+      }
+      
+      switch (error.code) {
+        case 'EACCES':
+          console.error(`❌ Port ${port} requires elevated privileges`);
+          process.exit(1);
+          break;
+        case 'EADDRINUSE':
+          console.error(`❌ Port ${port} is already in use`);
+          process.exit(1);
+          break;
+        default:
+          throw error;
+      }
     });
     
   } catch (error) {
-    console.error('Unable to start server:', error);
+    console.error('❌ Unable to start server:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack
+    });
     process.exit(1);
   }
 }

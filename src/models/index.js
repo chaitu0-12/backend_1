@@ -60,12 +60,31 @@ Student.hasMany(StudentFeedback, { foreignKey: 'studentId', as: 'studentFeedback
 StudentFeedback.belongsTo(Student, { foreignKey: 'studentId', as: 'student' });
 
 async function connectAndSync() {
-  // Authenticate with database
-  await db.authenticate();
-  console.log('Database connection established successfully');
+  try {
+    console.log('Attempting to connect to database...');
+    // Authenticate with database
+    await db.authenticate();
+    console.log('✅ Database connection established successfully');
+  } catch (authError) {
+    console.error('❌ Database authentication failed:', authError.message);
+    console.error('Authentication error details:', {
+      host: db.config.host,
+      port: db.config.port,
+      database: db.config.database,
+      username: db.config.username
+    });
+    throw authError;
+  }
 
-  // Safer sync: only create new tables, don't alter existing ones
-  await db.sync({ force: false });
+  try {
+    console.log('Syncing database models...');
+    // Safer sync: only create new tables, don't alter existing ones
+    await db.sync({ force: false });
+    console.log('✅ Database models synced successfully');
+  } catch (syncError) {
+    console.error('❌ Database sync failed:', syncError.message);
+    throw syncError;
+  }
   
   // Add missing columns if they don't exist
   try {
@@ -129,9 +148,10 @@ async function connectAndSync() {
       console.log('senior_feedback column check skipped:', innerErr.message);
     }
     
-    console.log('Database schema updated successfully');
+    console.log('✅ Database schema updated successfully');
   } catch (err) {
-    console.error('Error updating database schema:', err.message);
+    console.error('❌ Error updating database schema:', err.message);
+    // Don't throw here as we want the server to start even if schema updates fail
   }
 }
 

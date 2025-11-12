@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test:env": "node test-env.js"
+    "test:env": "node test-env.js",
+    "test:db": "node test-db-direct.js"
   },
   "keywords": [],
   "author": "",
