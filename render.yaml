@@ -10,15 +10,15 @@ services:
       - key: PORT
         value: 4000
       - key: DB_HOST
-        sync: false
+        value: dpg-d4a6g6buibrs73c8av30-a
       - key: DB_PORT
         value: 5432
       - key: DB_USER
-        sync: false
+        value: wetoo_user
       - key: DB_PASS
-        sync: false
+        value: KsHHuF2UrOXSfHzG9B72BvyrjA0BJ1fc
       - key: DB_NAME
-        sync: false
+        value: wetoo
       - key: DB_SSL
         value: true
       - key: JWT_SECRET
