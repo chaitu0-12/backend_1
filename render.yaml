@@ -1,0 +1,48 @@
+services:
+  - type: web
+    name: seniorassist-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: DB_HOST
+        fromDatabase:
+          name: seniorassist-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: seniorassist-db
+          property: port
+      - key: DB_USER
+        fromDatabase:
+          name: seniorassist-db
+          property: user
+      - key: DB_PASS
+        fromDatabase:
+          name: seniorassist-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: seniorassist-db
+          property: database
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_USER
+        value: kalyankumar.muli64@gmail.com
+      - key: SMTP_PASS
+        value: nnrt ednr glyh wrwz
+      - key: EMAIL_FROM
+        value: WE TOO <kalyankumar.muli64@gmail.com>
+
+databases:
+  - name: seniorassist-db
+    databaseName: student_senior_db
+    user: root
