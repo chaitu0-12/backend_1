@@ -104,13 +104,22 @@ async function requestOtp(req, res) {
         text: emailText,
         html: emailHtml
       });
+      
+      // Email sent successfully
+      return res.json({ 
+        message: 'OTP sent successfully. Please check your email.', 
+        otp: process.env.NODE_ENV === 'development' ? code : undefined // Only expose OTP in development
+      });
     } catch (emailError) {
       console.error('Email sending failed:', emailError);
-      // Don't fail the request if email sending fails, just log it
-      // The user can still use the OTP code if they check the logs or database
+      // Don't fail the request if email sending fails, still return success
+      // The user can still use the OTP code by checking the database or in development mode
+      return res.json({ 
+        message: 'OTP generated successfully. Please check your email or contact support if you don\'t receive it.', 
+        otp: process.env.NODE_ENV === 'development' ? code : undefined // Only expose OTP in development
+      });
     }
     
-    return res.json({ message: 'OTP sent' });
   } catch (error) {
     console.error('Error in requestOtp:', error);
     return res.status(500).json({ message: 'Internal server error' });
@@ -217,12 +226,17 @@ async function resetPassword(req, res) {
       The WE TOO Team
     `;
 
-    await sendMail({
-      to: email,
-      subject: 'WE TOO - Password Reset Successful',
-      text,
-      html,
-    });
+    try {
+      await sendMail({
+        to: email,
+        subject: 'WE TOO - Password Reset Successful',
+        text,
+        html,
+      });
+    } catch (emailError) {
+      console.error('Password reset confirmation email failed:', emailError);
+      // Don't fail the request if email sending fails
+    }
 
     return res.json({ message: 'Password updated successfully.' });
   } catch (error) {
