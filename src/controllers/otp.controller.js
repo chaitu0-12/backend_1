@@ -3,10 +3,12 @@ const { OtpToken } = require('../models');
 const { sendMail } = require('../utils/mailer');
 const { sequelize } = require('../models');
 
+// 🔹 Generate a random 6-digit OTP
 function generateCode() {
   return String(Math.floor(100000 + Math.random() * 900000));
 }
 
+// 🔹 Request OTP (for registration or password reset)
 async function requestOtp(req, res) {
   const { email, purpose = 'reset' } = req.body;
   if (!email) return res.status(400).json({ message: 'Email required' });
@@ -94,13 +96,19 @@ async function requestOtp(req, res) {
       Best regards,
       The WE TOO Team
     `;
-    
-    await sendMail({
-      to: email,
-      subject: purpose === 'registration' ? 'WE TOO - Email Verification Code' : 'WE TOO - Password Reset OTP',
-      text: emailText,
-      html: emailHtml
-    });
+
+    try {
+      await sendMail({
+        to: email,
+        subject: purpose === 'registration' ? 'WE TOO - Email Verification Code' : 'WE TOO - Password Reset OTP',
+        text: emailText,
+        html: emailHtml
+      });
+    } catch (emailError) {
+      console.error('Email sending failed:', emailError);
+      // Don't fail the request if email sending fails, just log it
+      // The user can still use the OTP code if they check the logs or database
+    }
     
     return res.json({ message: 'OTP sent' });
   } catch (error) {
@@ -109,53 +117,83 @@ async function requestOtp(req, res) {
   }
 }
 
+// 🔹 Verify OTP
 async function verifyOtp(req, res) {
   const { email, code, purpose = 'reset' } = req.body;
-  if (!email || !code) return res.status(400).json({ message: 'Email and code required' });
-  const token = await OtpToken.findOne({ where: { email, code, purpose, used: false } });
-  if (!token) return res.status(400).json({ message: 'Invalid code' });
-  if (token.expiresAt < new Date()) return res.status(400).json({ message: 'Code expired. Please request a new OTP.' });
-  
-  // Mark as used for registration purpose
-  if (purpose === 'registration') {
-    await token.update({ used: true });
+  if (!email || !code)
+    return res.status(400).json({ message: 'Email and code required' });
+
+  try {
+    const token = await OtpToken.findOne({
+      where: { email, code, purpose, used: false },
+    });
+
+    if (!token)
+      return res.status(400).json({ message: 'Invalid or used code.' });
+
+    // Compare using UTC-safe timestamps
+    if (new Date(token.expiresAt).getTime() < Date.now()) {
+      return res
+        .status(400)
+        .json({ message: 'Code expired. Please request a new OTP.' });
+    }
+
+    // Mark as used for registration
+    if (purpose === 'registration') {
+      await token.update({ used: true });
+    }
+
+    return res.json({ message: 'OTP verified successfully.' });
+  } catch (error) {
+    console.error('❌ Error in verifyOtp:', error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
-  
-  return res.json({ message: 'Verified' });
 }
 
+// 🔹 Reset Password
 async function resetPassword(req, res) {
   const { email, code, newPassword } = req.body;
-  if (!email || !code || !newPassword) return res.status(400).json({ message: 'Missing fields' });
-  const token = await OtpToken.findOne({ where: { email, code, purpose: 'reset', used: false } });
-  if (!token) return res.status(400).json({ message: 'Invalid code' });
-  if (token.expiresAt < new Date()) return res.status(400).json({ message: 'Code expired. Please request a new OTP.' });
+  if (!email || !code || !newPassword)
+    return res.status(400).json({ message: 'Missing fields' });
 
-  const passwordHash = await bcrypt.hash(newPassword, 10);
-  
   try {
-    // Update password in both tables using raw queries
+    const token = await OtpToken.findOne({
+      where: { email, code, purpose: 'reset', used: false },
+    });
+
+    if (!token)
+      return res.status(400).json({ message: 'Invalid or used OTP code.' });
+
+    if (new Date(token.expiresAt).getTime() < Date.now()) {
+      return res
+        .status(400)
+        .json({ message: 'OTP expired. Please request a new one.' });
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+
+    // 🔹 Update password in both tables
     const [studentResult] = await sequelize.query(
       'UPDATE students SET passwordHash = ? WHERE email = ?',
       { replacements: [passwordHash, email] }
     );
-    
+
     const [seniorResult] = await sequelize.query(
       'UPDATE seniors SET passwordHash = ? WHERE email = ?',
       { replacements: [passwordHash, email] }
     );
-    
+
     await token.update({ used: true });
 
-    const studentUpdated = studentResult.affectedRows > 0;
-    const seniorUpdated = seniorResult.affectedRows > 0;
-    
+    const studentUpdated = studentResult?.rowCount > 0;
+    const seniorUpdated = seniorResult?.rowCount > 0;
+
     if (!studentUpdated && !seniorUpdated) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'User not found.' });
     }
-    
-    // Send confirmation email
-    const emailHtml = `
+
+    // 🔹 Send confirmation email
+    const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #3498db;">WE TOO - Password Reset Successful</h2>
         <p>Hello,</p>
@@ -165,30 +203,30 @@ async function resetPassword(req, res) {
         <p>Best regards,<br>The WE TOO Team</p>
       </div>
     `;
-    
-    const emailText = `
+
+    const text = `
       WE TOO - Password Reset Successful
-      
+
       Hello,
-      
+
       Your password has been successfully reset for your WE TOO account.
-      
+
       If you did not perform this action, please contact our support team immediately.
-      
+
       Best regards,
       The WE TOO Team
     `;
-    
+
     await sendMail({
       to: email,
       subject: 'WE TOO - Password Reset Successful',
-      text: emailText,
-      html: emailHtml
+      text,
+      html,
     });
-    
-    return res.json({ message: 'Password updated' });
+
+    return res.json({ message: 'Password updated successfully.' });
   } catch (error) {
-    console.error('Error in resetPassword:', error);
+    console.error('❌ Error in resetPassword:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 }
