@@ -16,7 +16,7 @@ module.exports = (sequelize) => {
       indexes: [
         {
           unique: true,
-          fields: ['studentId', 'type']
+          fields: ['studentid', 'type']
         }
       ]
     }

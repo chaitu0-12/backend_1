@@ -27,10 +27,10 @@ module.exports = (sequelize) => {
       tableName: 'senior_requests',
       indexes: [
         {
-          fields: ['seniorId']
+          fields: ['seniorid']
         },
         {
-          fields: ['assignedStudentId']
+          fields: ['assignedstudentid']
         },
         {
           fields: ['status']

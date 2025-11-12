@@ -25,14 +25,14 @@ module.exports = (sequelize) => {
       tableName: 'senior_feedback',
       indexes: [
         {
-          fields: ['requestId'],
+          fields: ['requestid'],
           unique: true // One feedback per request
         },
         {
-          fields: ['seniorId']
+          fields: ['seniorid']
         },
         {
-          fields: ['studentId']
+          fields: ['studentid']
         },
         {
           fields: ['rating']

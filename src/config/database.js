@@ -54,15 +54,6 @@ function createSequelizeInstance() {
     common
   );
 
-  // Add connection event listeners for debugging
-  db.connectionManager.on('connection-acquired', (connection) => {
-    console.log('✅ Database connection acquired');
-  });
-  
-  db.connectionManager.on('connection-released', (connection) => {
-    console.log('🔄 Database connection released');
-  });
-
   return db;
 }
 
