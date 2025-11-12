@@ -2,12 +2,12 @@ const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
 function createSequelizeInstance() {
-  // Use Render environment variables directly
-  const dbHost = process.env.DB_HOST || 'localhost';
+  // Use Render environment variables directly with explicit fallbacks for your database
+  const dbHost = process.env.DB_HOST || 'dpg-d4a6g6buibrs73c8av30-a.oregon-postgres.render.com';
   const dbPort = Number(process.env.DB_PORT) || 5432;
-  const dbName = process.env.DB_NAME || 'student_senior_db';
-  const dbUser = process.env.DB_USER || 'root';
-  const dbPass = process.env.DB_PASS || '';
+  const dbName = process.env.DB_NAME || 'wetoo';
+  const dbUser = process.env.DB_USER || 'wetoo_user';
+  const dbPass = process.env.DB_PASS || 'KsHHuF2UrOXSfHzG9B72BvyrjA0BJ1fc';
   
   console.log('DB Config:', {
     host: dbHost,
