@@ -7,6 +7,8 @@ function createTransport() {
   const pass = process.env.SMTP_PASS || '';
   const secure = process.env.SMTP_SECURE === 'true' || port === 465;
 
+  console.log(`📧 Creating SMTP transport: ${host}:${port}, secure: ${secure}, user: ${user}`);
+
   const transporter = nodemailer.createTransport({
     host,
     port,
@@ -25,6 +27,8 @@ function createTransport() {
 async function sendMail({ to, subject, text, html }) {
   const from = process.env.EMAIL_FROM || 'WE TOO <noreply@wetoo.local>';
   const transporter = createTransport();
+  
+  console.log(`📧 Preparing to send email from ${from} to ${to} with subject: ${subject}`);
   
   try {
     const result = await transporter.sendMail({ from, to, subject, text, html });

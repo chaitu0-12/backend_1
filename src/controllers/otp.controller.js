@@ -40,6 +40,8 @@ async function requestOtp(req, res) {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
     await OtpToken.create({ email, code, purpose, expiresAt });
     
+    console.log(`✅ OTP generated for ${email}: ${code}`);
+    
     // Send detailed email with OTP
     const emailHtml = purpose === 'registration' ? `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -98,6 +100,7 @@ async function requestOtp(req, res) {
     `;
 
     try {
+      console.log(`📧 Sending OTP email to ${email} with code: ${code}`);
       await sendMail({
         to: email,
         subject: purpose === 'registration' ? 'WE TOO - Email Verification Code' : 'WE TOO - Password Reset OTP',
@@ -105,13 +108,14 @@ async function requestOtp(req, res) {
         html: emailHtml
       });
       
+      console.log(`✅ OTP email sent successfully to ${email}`);
       // Email sent successfully
       return res.json({ 
         message: 'OTP sent successfully. Please check your email.', 
         otp: process.env.NODE_ENV === 'development' ? code : undefined // Only expose OTP in development
       });
     } catch (emailError) {
-      console.error('Email sending failed:', emailError);
+      console.error(`❌ Email sending failed for ${email}:`, emailError);
       // Don't fail the request if email sending fails, still return success
       // The user can still use the OTP code by checking the database or in development mode
       return res.json({ 
