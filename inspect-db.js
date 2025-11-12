@@ -24,10 +24,10 @@ async function inspectDatabase() {
     await sequelize.authenticate();
     console.log('✅ Database connection established successfully');
     
-    // Check seniors table columns
-    console.log('\n=== COLUMNS IN SENIORS TABLE ===');
+    // Check senior_feedback table columns
+    console.log('\n=== COLUMNS IN SENIOR_FEEDBACK TABLE ===');
     const columns = await sequelize.query(
-      `SELECT column_name, data_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'seniors' ORDER BY ordinal_position`,
+      `SELECT column_name, data_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'senior_feedback' ORDER BY ordinal_position`,
       { type: sequelize.QueryTypes.SELECT }
     );
     

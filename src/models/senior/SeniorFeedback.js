@@ -7,7 +7,6 @@ module.exports = (sequelize) => {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
       requestId: { type: DataTypes.INTEGER, allowNull: true, field: 'request_id' }, // Allow null for general feedback
       seniorId: { type: DataTypes.INTEGER, allowNull: true, field: 'senior_id' }, // Allow null for anonymous feedback
-      studentId: { type: DataTypes.INTEGER, allowNull: true, field: 'student_id' }, // Allow null for general feedback
       rating: { type: DataTypes.INTEGER, allowNull: false, validate: { min: 1, max: 5 } },
       feedback: { type: DataTypes.TEXT, allowNull: true, field: 'feedback_text' },
       // New fields to capture services requested and desired features
@@ -30,9 +29,6 @@ module.exports = (sequelize) => {
         },
         {
           fields: ['senior_id']
-        },
-        {
-          fields: ['student_id']
         },
         {
           fields: ['rating']
