@@ -109,18 +109,15 @@ async function requestOtp(req, res) {
       });
       
       console.log(`✅ OTP email sent successfully to ${email}`);
-      // Email sent successfully
+      // Email sent successfully - only show generic message
       return res.json({ 
-        message: 'OTP sent successfully. Please check your email.', 
-        otp: process.env.NODE_ENV === 'development' ? code : undefined // Only expose OTP in development
+        message: 'OTP sent successfully. Please check your email for the verification code.'
       });
     } catch (emailError) {
       console.error(`❌ Email sending failed for ${email}:`, emailError);
       // Don't fail the request if email sending fails, still return success
-      // The user can still use the OTP code by checking the database or in development mode
       return res.json({ 
-        message: 'OTP generated successfully. Please check your email or contact support if you don\'t receive it.', 
-        otp: process.env.NODE_ENV === 'development' ? code : undefined // Only expose OTP in development
+        message: 'OTP generated successfully. Please check your email for the verification code or contact support if you don\'t receive it.'
       });
     }
     
