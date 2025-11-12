@@ -2,23 +2,30 @@ const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
 function createSequelizeInstance() {
+  // Use Render environment variables directly
+  const dbHost = process.env.DB_HOST || 'localhost';
+  const dbPort = Number(process.env.DB_PORT) || 5432;
+  const dbName = process.env.DB_NAME || 'student_senior_db';
+  const dbUser = process.env.DB_USER || 'root';
+  const dbPass = process.env.DB_PASS || '';
+  
   console.log('DB Config:', {
-    host: process.env.DB_HOST || 'localhost',
-    port: Number(process.env.DB_PORT || 3306),
-    database: process.env.DB_NAME || 'student_senior_db',
-    username: process.env.DB_USER || 'root',
-    password: process.env.DB_PASS || '',
+    host: dbHost,
+    port: dbPort,
+    database: dbName,
+    username: dbUser,
+    password: dbPass ? '****' : ''
   });
   
   const common = {
-    host: process.env.DB_HOST || 'localhost',
-    port: Number(process.env.DB_PORT || 5432),
+    host: dbHost,
+    port: dbPort,
     dialect: 'postgres',
     logging: false,
     dialectOptions: {
-      ssl: process.env.DB_SSL === 'true' ? {
-        rejectUnauthorized: true
-      } : false,
+      ssl: {
+        rejectUnauthorized: false
+      },
       connectTimeout: 60000
     },
     pool: {
@@ -30,9 +37,9 @@ function createSequelizeInstance() {
   };
 
   const db = new Sequelize(
-    process.env.DB_NAME || 'student_senior_db',
-    process.env.DB_USER || 'root',
-    process.env.DB_PASS || '',
+    dbName,
+    dbUser,
+    dbPass,
     common
   );
 
