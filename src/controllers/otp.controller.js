@@ -35,7 +35,7 @@ async function requestOtp(req, res) {
     }
     
     const code = generateCode();
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
     await OtpToken.create({ email, code, purpose, expiresAt });
     
     // Send detailed email with OTP
@@ -45,7 +45,7 @@ async function requestOtp(req, res) {
         <p>Hello,</p>
         <p>Thank you for registering with WE TOO. Please verify your email address to continue.</p>
         <p style="font-size: 20px; font-weight: bold; color: #e74c3c;">Your verification code is: ${code}</p>
-        <p>This code will expire in 5 minutes.</p>
+        <p>This code will expire in 10 minutes.</p>
         <p>If you did not request this verification, please ignore this email.</p>
         <br>
         <p>Best regards,<br>The WE TOO Team</p>
@@ -56,13 +56,13 @@ async function requestOtp(req, res) {
         <p>Hello,</p>
         <p>You have requested to reset your password for your WE TOO account.</p>
         <p style="font-size: 20px; font-weight: bold; color: #e74c3c;">Your OTP code is: ${code}</p>
-        <p>This code will expire in 5 minutes.</p>
+        <p>This code will expire in 10 minutes.</p>
         <p>If you did not request this password reset, please ignore this email.</p>
         <br>
         <p>Best regards,<br>The WE TOO Team</p>
       </div>
     `;
-    
+
     const emailText = purpose === 'registration' ? `
       WE TOO - Email Verification
       
@@ -72,7 +72,7 @@ async function requestOtp(req, res) {
       
       Your verification code is: ${code}
       
-      This code will expire in 5 minutes.
+      This code will expire in 10 minutes.
       
       If you did not request this verification, please ignore this email.
       
@@ -87,7 +87,7 @@ async function requestOtp(req, res) {
       
       Your OTP code is: ${code}
       
-      This code will expire in 5 minutes.
+      This code will expire in 10 minutes.
       
       If you did not request this password reset, please ignore this email.
       
