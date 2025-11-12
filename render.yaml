@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: seniorassist-backend
+    name: backend-1-1-p7wr
     env: node
     buildCommand: npm install
     startCommand: npm start
