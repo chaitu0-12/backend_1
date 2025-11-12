@@ -1,5 +1,4 @@
 const dotenv = require('dotenv');
-const mysql = require('mysql2/promise');
 const { createSequelizeInstance } = require('../config/database');
 
 dotenv.config();
@@ -52,30 +51,9 @@ Student.hasMany(StudentFeedback, { foreignKey: 'studentId', as: 'studentFeedback
 StudentFeedback.belongsTo(Student, { foreignKey: 'studentId', as: 'student' });
 
 async function connectAndSync() {
-  // Ensure database exists before Sequelize connects
-  try {
-    const connection = await mysql.createConnection({
-      host: process.env.DB_HOST || 'localhost',
-      port: Number(process.env.DB_PORT || 3306),
-      user: process.env.DB_USER || 'root',
-      password: process.env.DB_PASS || '',
-      multipleStatements: true,
-    });
-
-    const dbName = process.env.DB_NAME || 'student_senior_db';
-
-    // Ensure database exists (non-destructive)
-    await connection.query(
-      `CREATE DATABASE IF NOT EXISTS \`${dbName}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
-    );
-
-    await connection.end();
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error('MySQL ensure database error:', err.message);
-  }
-
+  // Authenticate with database
   await db.authenticate();
+  console.log('Database connection established successfully');
 
   // Safer sync: only create new tables, don't alter existing ones
   await db.sync({ force: false });
@@ -84,36 +62,36 @@ async function connectAndSync() {
   try {
     // Check if termsAccepted column exists in students table
     const [studentColumns] = await db.query(`
-      SELECT COLUMN_NAME 
-      FROM INFORMATION_SCHEMA.COLUMNS 
-      WHERE TABLE_SCHEMA = DATABASE() 
-      AND TABLE_NAME = 'students' 
-      AND COLUMN_NAME = 'termsAccepted'
+      SELECT column_name 
+      FROM information_schema.columns 
+      WHERE table_schema = 'public' 
+      AND table_name = 'students' 
+      AND column_name = 'termsaccepted'
     `);
     
     // Add termsAccepted column to students table if it doesn't exist
     if (studentColumns.length === 0) {
       await db.query(`
         ALTER TABLE students 
-        ADD COLUMN termsAccepted BOOLEAN NOT NULL DEFAULT FALSE
+        ADD COLUMN termsaccepted BOOLEAN NOT NULL DEFAULT FALSE
       `);
       console.log('Added termsAccepted column to students table');
     }
     
     // Check if termsAccepted column exists in seniors table
     const [seniorColumns] = await db.query(`
-      SELECT COLUMN_NAME 
-      FROM INFORMATION_SCHEMA.COLUMNS 
-      WHERE TABLE_SCHEMA = DATABASE() 
-      AND TABLE_NAME = 'seniors' 
-      AND COLUMN_NAME = 'termsAccepted'
+      SELECT column_name 
+      FROM information_schema.columns 
+      WHERE table_schema = 'public' 
+      AND table_name = 'seniors' 
+      AND column_name = 'termsaccepted'
     `);
     
     // Add termsAccepted column to seniors table if it doesn't exist
     if (seniorColumns.length === 0) {
       await db.query(`
         ALTER TABLE seniors 
-        ADD COLUMN termsAccepted BOOLEAN NOT NULL DEFAULT FALSE
+        ADD COLUMN termsaccepted BOOLEAN NOT NULL DEFAULT FALSE
       `);
       console.log('Added termsAccepted column to seniors table');
     }
@@ -121,19 +99,19 @@ async function connectAndSync() {
     // Ensure senior_feedback has servicesNeeded and featuresNeeded columns
     try {
       const [feedbackCols] = await db.query(`
-        SELECT COLUMN_NAME 
-        FROM INFORMATION_SCHEMA.COLUMNS 
-        WHERE TABLE_SCHEMA = DATABASE() 
-        AND TABLE_NAME = 'senior_feedback'
+        SELECT column_name 
+        FROM information_schema.columns 
+        WHERE table_schema = 'public' 
+        AND table_name = 'senior_feedback'
       `);
 
-      const colNames = feedbackCols.map(c => c.COLUMN_NAME);
-      if (!colNames.includes('servicesNeeded')) {
-        await db.query(`ALTER TABLE senior_feedback ADD COLUMN servicesNeeded TEXT NULL`);
+      const colNames = feedbackCols.map(c => c.column_name);
+      if (!colNames.includes('servicesneeded')) {
+        await db.query(`ALTER TABLE senior_feedback ADD COLUMN servicesneeded TEXT`);
         console.log('Added servicesNeeded column to senior_feedback table');
       }
-      if (!colNames.includes('featuresNeeded')) {
-        await db.query(`ALTER TABLE senior_feedback ADD COLUMN featuresNeeded TEXT NULL`);
+      if (!colNames.includes('featuresneeded')) {
+        await db.query(`ALTER TABLE senior_feedback ADD COLUMN featuresneeded TEXT`);
         console.log('Added featuresNeeded column to senior_feedback table');
       }
     } catch (innerErr) {
